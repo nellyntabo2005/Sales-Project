@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+#installed apps
     'users',
     'customers',
     'products',
@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'erp_sales.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'sales_db',
-        'USER':'root',
-        'PASSWORD':'Bonareri123',
-        'HOST':'localhost',
-        'PORT':'3306'
+        'NAME': 'sales_db',
+        'USER': 'root',
+        'PASSWORD': '@Kar1ng3',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
