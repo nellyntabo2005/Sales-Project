@@ -1,11 +1,16 @@
 from django.db import models
-
 from sales.models import Sale
 
 
 class Payment(models.Model):
 
-    sale = models.ForeignKey(
+    PAYMENT_METHODS = (
+        ('cash', 'Cash'),
+        ('card', 'Card'),
+        ('mobile', 'Mobile Money'),
+    )
+
+    sale = models.OneToOneField(
         Sale,
         on_delete=models.CASCADE
     )
@@ -21,27 +26,38 @@ class Payment(models.Model):
         default=0
     )
 
-    payment_method = models.CharField(max_length=20)
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_METHODS
+    )
 
     payment_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.payment_method
+    def save(self, *args, **kwargs):
 
+        # get sale total
+        total = self.sale.total
+
+        # calculate change
+        if self.amount_paid > total:
+            self.change_given = self.amount_paid - total
+        else:
+            self.change_given = 0
+
+        # mark sale as paid
+        self.sale.status = "paid"
+        self.sale.save()
+
+        super().save(*args, **kwargs)
 
 class Receipt(models.Model):
 
-    sale = models.ForeignKey(
-        Sale,
-        on_delete=models.CASCADE
-    )
+    sale = models.OneToOneField(Sale, on_delete=models.CASCADE)
 
-    receipt_number = models.CharField(
-        max_length=50,
-        unique=True
-    )
+    receipt_number = models.CharField(max_length=50, unique=True)
 
-    printed_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.receipt_number
+   
