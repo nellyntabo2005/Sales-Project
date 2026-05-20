@@ -1,29 +1,37 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(models.Model):
+class User(AbstractUser):
 
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('cashier', 'Cashier'),
+        ('accountant', 'Accountant'),
+        ('storekeeper', 'Storekeeper'),
         ('manager', 'Manager'),
     ]
-
-    name = models.CharField(max_length=100)
-
-    email = models.EmailField(unique=True)
-
-    password = models.CharField(max_length=255)
 
     role = models.CharField(
         max_length=50,
         choices=ROLE_CHOICES
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    pin = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def __str__(self):
-        return self.name
+        return self.username
+
+
+
     
 
 

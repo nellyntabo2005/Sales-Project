@@ -31,27 +31,30 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-#installed apps
-    'users',
-    'customers',
-    'products',
-    'sales',
-    'payments',
-    'returns',
     'rest_framework',
 
-
-
-
-    
+    'users.apps.UsersConfig',
+    'customers.apps.CustomersConfig',
+    'products.apps.ProductsConfig',
+    'sales.apps.SalesConfig',
+    'payments.apps.PaymentsConfig',
+    'returns.apps.ReturnsConfig',
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -137,4 +140,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    
 }
+ 
