@@ -15,14 +15,12 @@ class Product(models.Model):
         unique=True
     )
 
-    unit_price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
+    stock_quantity = models.IntegerField(default=0)
 
-    stock_quantity = models.IntegerField()
+    reserved_stock = models.IntegerField(default=0)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    def available_stock(self):
+        return self.stock_quantity - self.reserved_stock
 
     def __str__(self):
         return self.name
