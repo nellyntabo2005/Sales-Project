@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Payment
-from .models import Payment, Receipt
+from sales.models import Receipt
 
 
 class PaymentSerializer(serializers.ModelSerializer):
