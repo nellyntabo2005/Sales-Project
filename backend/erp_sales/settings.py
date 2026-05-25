@@ -52,9 +52,8 @@ INSTALLED_APPS = [
     'sales.apps.SalesConfig',
     'payments.apps.PaymentsConfig',
     'returns.apps.ReturnsConfig',
+    'reports.apps.ReportsConfig',
 
-    
-    
     'channels',
     'notifications.apps.NotificationsConfig',
 ]
