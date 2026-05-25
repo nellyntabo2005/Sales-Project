@@ -18,3 +18,17 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+class loyalty_points(models.Model):
+
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name='loyalty_points'
+    )
+
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.customer.name} - {self.points} points"
+    

@@ -52,6 +52,11 @@ INSTALLED_APPS = [
     'sales.apps.SalesConfig',
     'payments.apps.PaymentsConfig',
     'returns.apps.ReturnsConfig',
+
+    
+    'daphne',
+    'channels',
+    'notifications.apps.NotificationsConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -90,7 +95,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'erp_sales.wsgi.application'
 
+ASGI_APPLICATION = "erp_sales.asgi.application"
 
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
