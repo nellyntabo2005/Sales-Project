@@ -9,11 +9,17 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from backend/.env
+
+
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# (BASE_DIR already defined above)
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,14 +37,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework',
 
     'users.apps.UsersConfig',
@@ -47,6 +52,11 @@ INSTALLED_APPS = [
     'sales.apps.SalesConfig',
     'payments.apps.PaymentsConfig',
     'returns.apps.ReturnsConfig',
+
+    
+    
+    'channels',
+    'notifications.apps.NotificationsConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -85,18 +95,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'erp_sales.wsgi.application'
 
+ASGI_APPLICATION = "erp_sales.asgi.application"
 
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'sales_db',
-        'USER':'root',
-        'PASSWORD':'Bonareri123',
-        'HOST':'localhost',
-        'PORT':'3306'
+        'NAME': 'sales_db',
+        'USER': 'root',
+        'PASSWORD': '@Kar1ng3',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 

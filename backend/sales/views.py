@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
+from urllib3 import request
 from .models import Sale, SaleItem
 from .models import Sale
 from .serializers import SaleSerializer
@@ -13,6 +14,8 @@ from .models import Sale, SaleItem, Receipt
 from products.models import Product
 from payments.models import Payment
 from users.models import AuditLog
+
+from notifications.utils import send_notification
 
 class SaleViewSet(viewsets.ModelViewSet):
     queryset = Sale.objects.all()
@@ -78,6 +81,7 @@ class POSCheckoutView(APIView):
 
         # 5. CREATE RECEIPT
         receipt = Receipt.objects.create(payment=payment)
+        send_notification(request.user, f"🛒 POS completed: Sale #{sale.id}, Receipt #{receipt.receipt_number}")
 
         # 6. AUDIT LOG
         AuditLog.objects.create(
@@ -90,6 +94,12 @@ class POSCheckoutView(APIView):
             "message": "Transaction successful",
             "sale_id": sale.id,
             "receipt_number": receipt.receipt_number
+
+        
         }, status=status.HTTP_201_CREATED)
        
-        
+    def perform_create(self, serializer):
+        sale = serializer.save()
+        send_notification(request.user, f"🛒 New sale created: Sale ID {sale.id} for customer {sale.customer.name} with total KES{sale.total}")
+
+    
