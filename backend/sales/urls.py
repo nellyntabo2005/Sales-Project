@@ -1,8 +1,11 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import SaleViewSet, SaleItemViewSet
+from .views import SaleViewSet, POSCheckoutView
 
 router = DefaultRouter()
 router.register(r'sales', SaleViewSet)
-router.register(r'items', SaleItemViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+    path('checkout/', POSCheckoutView.as_view()),
+]
