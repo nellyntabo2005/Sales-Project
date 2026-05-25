@@ -9,6 +9,13 @@ class Payment(models.Model):
         ('mpesa', 'M-Pesa'),
     ]
 
+    PAYMENT_STATUS = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
     sale = models.ForeignKey(
         'sales.Sale',
         on_delete=models.CASCADE
@@ -30,12 +37,38 @@ class Payment(models.Model):
         choices=PAYMENT_METHODS
     )
 
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS,
+        default='pending'
+    )
+
     payment_date = models.DateTimeField(auto_now_add=True)
+    
+    # M-Pesa specific fields
+    mpesa_transaction_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="M-Pesa transaction ID"
+    )
+    
+    mpesa_checkout_request_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Checkout request ID from STK push"
+    )
+    
+    phone_number = models.CharField(
+        max_length=15,
+        blank=True,
+        null=True,
+        help_text="Customer phone number for M-Pesa"
+    )
 
     def __str__(self):
-        return f"Payment for Sale {self.sale_id}"
+        return f"Payment for Sale {self.sale_id} - {self.get_payment_method_display()}"
 
 
-
-        
     

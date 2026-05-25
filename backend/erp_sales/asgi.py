@@ -16,7 +16,16 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "erp_sales.settings")
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
+    
     "websocket": URLRouter(
         notifications.routing.websocket_urlpatterns
     ),
 })
+
+
+
+
+
+
+
+application = get_asgi_application()
