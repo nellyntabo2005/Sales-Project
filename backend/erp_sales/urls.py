@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from erp_sales import views
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -26,6 +27,8 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
 
     path('admin/', admin.site.urls),
+    path('',views.Home,name='my index')
+
 
     path('api/customers/', include('customers.urls')),
     path('api/products/', include('products.urls')),
