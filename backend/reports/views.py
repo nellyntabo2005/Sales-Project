@@ -72,7 +72,7 @@ class SavedReportViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return SavedReport.objects.filter(
-            models.Q(created_by=user) | models.Q(is_public=True)
+           # models.Q(created_by=user) | models.Q(is_public=True)
         )
     
     def perform_create(self, serializer):
