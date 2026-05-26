@@ -135,11 +135,26 @@ class Supplier(models.Model):
 
 
 class Product(models.Model):
+<<<<<<< HEAD
     """
     Main Product model for ERP/POS system
     """
     
     # === IDENTIFIERS ===
+=======
+
+    name = models.CharField(max_length=150)
+
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     sku = models.CharField(
         max_length=50,
         unique=True,
@@ -153,6 +168,7 @@ class Product(models.Model):
         blank=True,
         help_text="Product barcode (EAN-13 format)"
     )
+<<<<<<< HEAD
     
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     
@@ -417,3 +433,28 @@ class ProductImage(models.Model):
 
 
     
+=======
+
+    
+
+    stock_quantity = models.IntegerField(default=0)
+
+    reserved_stock = models.IntegerField(default=0)
+
+    def available_stock(self):
+        return self.stock_quantity - self.reserved_stock
+
+    def __str__(self):
+        return self.name
+    
+
+class Supplier(models.Model):
+
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+
+    
+    def __str__(self):
+        return self.name
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d

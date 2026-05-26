@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from decimal import Decimal
 from .models import Category, Supplier, Product, ProductImage
+<<<<<<< HEAD
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -81,6 +82,83 @@ class ProductSerializer(serializers.ModelSerializer):
     is_low_stock = serializers.BooleanField(read_only=True)
     stock_value = serializers.DecimalField(read_only=True, max_digits=12, decimal_places=2)
     
+=======
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    #Serializer for Product Categories
+
+    full_path = serializers.SerializerMethodField()
+    level = serializers.IntegerField(read_only=True)
+    children_count = serializers.SerializerMethodField()
+    parent_name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Category
+        fields = [
+            'id', 'name', 'slug', 'description', 'parent', 'parent_name',
+            'icon', 'color', 'is_active', 'full_path', 'level',
+            'children_count', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'slug', 'created_at', 'updated_at']
+    
+    def get_full_path(self, obj):
+        return obj.get_full_path() if hasattr(obj, 'get_full_path') else obj.name
+    
+    def get_children_count(self, obj):
+        return obj.children.filter(is_active=True).count() if hasattr(obj, 'children') else 0
+    
+    def get_parent_name(self, obj):
+        return obj.parent.name if obj.parent else None
+
+
+class SupplierSerializer(serializers.ModelSerializer):
+    #Serializer for Product Suppliers
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
+    class Meta:
+        model = Supplier
+        fields = [
+            'id', 'name', 'code', 'contact_person', 'phone', 'email',
+            'website', 'address_line1', 'address_line2', 'city', 'county',
+            'postal_code', 'tax_number', 'bank_name', 'bank_account',
+            'is_active', 'is_preferred', 'payment_terms', 'notes',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'code', 'created_at', 'updated_at']
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    #Serializer for Product Images
+    
+    image_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image', 'image_url', 'caption', 'is_primary', 'order']
+        read_only_fields = ['id']
+    
+    def get_image_url(self, obj):
+        if obj.image:
+            return obj.image.url
+        return None
+
+
+    #Main serializer for Products
+class ProductSerializer(serializers.ModelSerializer):
+    
+    
+    # Nested serializers for detailed views
+    category_name = serializers.SerializerMethodField()
+    supplier_name = serializers.SerializerMethodField()
+    images = ProductImageSerializer(many=True, read_only=True)
+    #batches = BatchSerializer(many=True, read_only=True)
+    
+    # Computed fields
+    profit_margin = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
+    is_low_stock = serializers.BooleanField(read_only=True)
+    stock_value = serializers.DecimalField(read_only=True, max_digits=12, decimal_places=2)
+    
     class Meta:
         model = Product
         fields = [
@@ -116,7 +194,11 @@ class ProductSerializer(serializers.ModelSerializer):
         return value
     
     def validate(self, data):
+<<<<<<< HEAD
         """Cross-field validation"""
+=======
+        #Cross-field validation
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
         # Ensure wholesale price is less than retail price
         if 'wholesale_price' in data and data.get('wholesale_price'):
             retail = data.get('retail_price', getattr(self.instance, 'retail_price', None))
@@ -128,9 +210,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductImportSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """
     Serializer for bulk product import via Excel/CSV
     """
+=======
+    #Serializer for bulk product import via Excel/CSV
+    
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     file = serializers.FileField()
     
     def validate_file(self, value):
@@ -146,9 +233,14 @@ class ProductImportSerializer(serializers.Serializer):
 
 
 class BulkPriceUpdateSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """
     Serializer for bulk price updates
     """
+=======
+    #Serializer for bulk price updates
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     product_ids = serializers.ListField(
         child=serializers.IntegerField(),
         required=False,
@@ -164,7 +256,11 @@ class BulkPriceUpdateSerializer(serializers.Serializer):
     )
     
     def validate(self, data):
+<<<<<<< HEAD
         """Ensure either product_ids or category_id or supplier_id is provided"""
+=======
+        #Ensure either product_ids or category_id or supplier_id is provided
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
         if not data.get('product_ids') and not data.get('category_id') and not data.get('supplier_id'):
             raise serializers.ValidationError(
                 "Either product_ids, category_id, or supplier_id must be provided"
@@ -173,9 +269,14 @@ class BulkPriceUpdateSerializer(serializers.Serializer):
 
 
 class ProductStockUpdateSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """
     Serializer for updating product stock
     """
+=======
+    #Serializer for updating product stock
+    
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     quantity = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=0.01)
     operation = serializers.ChoiceField(choices=['set', 'add', 'subtract'], default='add')
     reason = serializers.CharField(required=False, allow_blank=True)
@@ -183,9 +284,14 @@ class ProductStockUpdateSerializer(serializers.Serializer):
 
 
 class ProductSearchSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """
     Serializer for product search filters
     """
+=======
+    #Serializer for product search filters
+    
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     q = serializers.CharField(required=False, allow_blank=True)
     category = serializers.IntegerField(required=False)
     supplier = serializers.IntegerField(required=False)

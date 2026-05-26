@@ -128,6 +128,7 @@ class Customer(models.Model):
         verbose_name_plural = "Customers"
     
     def __str__(self):
+<<<<<<< HEAD
         return f"{self.name} ({self.phone})"
     
     def save(self, *args, **kwargs):
@@ -184,3 +185,20 @@ class Customer(models.Model):
         """Return formatted full address"""
         parts = [self.address_line1, self.address_line2, self.city, self.county]
         return ", ".join([p for p in parts if p])
+=======
+        return self.name
+
+class loyalty_points(models.Model):
+
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name='loyalty_points'
+    )
+
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.customer.name} - {self.points} points"
+    
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d

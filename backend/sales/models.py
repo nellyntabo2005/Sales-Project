@@ -14,6 +14,7 @@ from users.models import User
 # We'll add the Product import when creating the relationship
 
 class Sale(models.Model):
+<<<<<<< HEAD
     """
     Sale/Transaction model - Core of POS system.
     Records each sale transaction.
@@ -180,6 +181,20 @@ class Sale(models.Model):
         verbose_name = 'Sale'
         verbose_name_plural = 'Sales'
     
+=======
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tax = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    status = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     def __str__(self):
         return f"{self.sale_id} - {self.customer.name if self.customer else 'Walk-in Customer'} - {self.total}"
     

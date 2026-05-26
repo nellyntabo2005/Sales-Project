@@ -163,12 +163,18 @@ class PaymentTransaction(models.Model):
         ('loyalty', 'Loyalty Points'),
         ('mixed', 'Mixed Payment'),
     ]
+<<<<<<< HEAD
     
     STATUS_CHOICES = [
+=======
+
+    PAYMENT_STATUS = [
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
         ('pending', 'Pending'),
         ('completed', 'Completed'),
         ('failed', 'Failed'),
         ('cancelled', 'Cancelled'),
+<<<<<<< HEAD
         ('refunded', 'Refunded'),
         ('disputed', 'Disputed'),
     ]
@@ -236,6 +242,10 @@ class PaymentTransaction(models.Model):
         db_index=True,
         help_text="External reference (cheque number, M-Pesa code, etc.)"
     )
+=======
+    ]
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     sale = models.ForeignKey(
         Sale, 
         on_delete=models.SET_NULL, 
@@ -271,6 +281,7 @@ class PaymentTransaction(models.Model):
         blank=True, 
         related_name='verified_payments'
     )
+<<<<<<< HEAD
     
     # Timestamps
     transaction_date = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -855,3 +866,41 @@ class Expense(models.Model):
         
         self.total_amount = self.amount + self.tax_amount
         super().save(*args, **kwargs)
+=======
+
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS,
+        default='pending'
+    )
+
+    payment_date = models.DateTimeField(auto_now_add=True)
+    
+    # M-Pesa specific fields
+    mpesa_transaction_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="M-Pesa transaction ID"
+    )
+    
+    mpesa_checkout_request_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Checkout request ID from STK push"
+    )
+    
+    phone_number = models.CharField(
+        max_length=15,
+        blank=True,
+        null=True,
+        help_text="Customer phone number for M-Pesa"
+    )
+
+    def __str__(self):
+        return f"Payment for Sale {self.sale_id} - {self.get_payment_method_display()}"
+
+
+    
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d

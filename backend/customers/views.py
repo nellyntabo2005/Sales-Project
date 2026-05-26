@@ -8,11 +8,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from .models import Customer
+<<<<<<< HEAD
 from .serializers import (
     CustomerSerializer, 
     CustomerLoyaltySerializer, 
     CustomerRedeemPointsSerializer
 )
+=======
+from .serializers import CustomerSerializer
+from notifications.utils import send_notification
+from urllib3 import request
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
 
 class CustomerViewSet(viewsets.ModelViewSet):
     """
@@ -27,6 +34,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+<<<<<<< HEAD
     permission_classes = [IsAuthenticated]
     
     # Filtering, searching, ordering
@@ -182,3 +190,12 @@ class CustomerViewSet(viewsets.ModelViewSet):
             {"message": f"Customer {customer.name} has been deactivated"},
             status=status.HTTP_200_OK
         )
+=======
+
+# notifications for new customers
+    def perform_create(self, serializer):
+        customer = serializer.save()
+        send_notification(request.user, f"👤 New customer added: {customer.name}")
+
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d

@@ -3,6 +3,7 @@ from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+<<<<<<< HEAD
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q, Sum, F, Count
@@ -246,6 +247,11 @@ class SupplierViewSet(viewsets.ModelViewSet):
         
         return response
 
+=======
+from users.permissions import IsAdmin
+from notifications.utils import send_notification
+from urllib3 import request
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
@@ -254,6 +260,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+<<<<<<< HEAD
     permission_classes = [IsAuthenticated]
     
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -1231,3 +1238,18 @@ class ProductImageViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Primary image set successfully'})
 
 
+=======
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def perform_create(self, serializer):
+        product = serializer.save()
+        send_notification(request.user, f"📦 New product added: {product.name}")
+
+    def perform_update(self, serializer):
+        product = serializer.save()
+
+        send_notification(request.user, f"✏️ Product updated: {product.name}")
+
+        if product.stock < 20:
+            send_notification(request.user, f"⚠️ Low stock alert: {product.name}: Only {product.stock} left!")
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d

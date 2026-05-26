@@ -124,7 +124,11 @@ class MpesaTransactionSerializer(serializers.ModelSerializer):
 
 
 class MpesaStkPushSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """Serializer for initiating STK Push"""
+=======
+    #Serializer for initiating STK Push
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     phone_number = serializers.CharField(max_length=15)
     amount = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=1)
     account_reference = serializers.CharField(max_length=50)
@@ -150,7 +154,11 @@ class MpesaStkPushSerializer(serializers.Serializer):
 
 
 class MpesaQueryStatusSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """Serializer for querying transaction status"""
+=======
+    #Serializer for querying transaction status
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     checkout_request_id = serializers.CharField(max_length=100)
 
 

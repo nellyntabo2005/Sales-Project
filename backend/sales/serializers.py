@@ -3,19 +3,32 @@ from rest_framework import serializers
 from decimal import Decimal
 from django.db import transaction
 
+<<<<<<< HEAD
 from .models import Sale, SaleItem, Payment, Receipt
+=======
+from .models import Sale, SaleItem,  Receipt
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
 # REMOVE these lines - they don't belong here:
 # from .models import Return, ReturnItem, ReturnImage, ReturnLog
 
 from customers.models import Customer
 from users.models import User
 from products.models import Product
+<<<<<<< HEAD
 
 
 class SaleItemSerializer(serializers.ModelSerializer):
     """
     Serializer for individual sale items
     """
+=======
+from payments.models import Payment
+
+
+class SaleItemSerializer(serializers.ModelSerializer):
+    #Serializer for individual sale items
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     product_name = serializers.CharField(read_only=True)
     product_sku = serializers.CharField(read_only=True)
     product_barcode = serializers.CharField(read_only=True)
@@ -38,6 +51,7 @@ class SaleItemSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError("Unit price cannot be negative")
         return value
+<<<<<<< HEAD
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -78,6 +92,59 @@ class SaleSerializer(serializers.ModelSerializer):
     """
     Main serializer for Sale with nested items and payments
     """
+    items = SaleItemSerializer(many=True, read_only=True)
+    payments = PaymentSerializer(many=True, read_only=True)
+    receipt = ReceiptSerializer(read_only=True)
+    
+    customer_name = serializers.SerializerMethodField()
+    cashier_name = serializers.SerializerMethodField()
+    
+    cart_items = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.DictField(),
+        help_text="List of {product_id, quantity, discount_percentage}"
+    )
+    
+=======
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    #Serializer for payments
+
+    recorded_by_name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Payment
+        fields = [
+            'id', 'sale', 'payment_method', 'amount', 'mpesa_receipt_number',
+            'mpesa_phone_number', 'card_last_four', 'card_transaction_id',
+            'points_used', 'reference_number', 'payment_date', 'notes',
+            'recorded_by', 'recorded_by_name'
+        ]
+        read_only_fields = ['id', 'payment_date', 'recorded_by_name']
+    
+    def get_recorded_by_name(self, obj):
+        return obj.recorded_by.get_full_name() or obj.recorded_by.username
+
+
+class ReceiptSerializer(serializers.ModelSerializer):
+    #Serializer for receipts
+
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
+    class Meta:
+        model = Receipt
+        fields = [
+            'id', 'sale', 'receipt_number', 'receipt_html', 'receipt_text',
+            'sent_via_email', 'sent_via_sms', 'sent_via_whatsapp', 'printed',
+            'generated_at', 'printed_at'
+        ]
+        read_only_fields = ['id', 'receipt_number', 'generated_at']
+
+
+class SaleSerializer(serializers.ModelSerializer):
+    #Main serializer for Sale with nested items and payments
+
     items = SaleItemSerializer(many=True, read_only=True)
     payments = PaymentSerializer(many=True, read_only=True)
     receipt = ReceiptSerializer(read_only=True)
@@ -183,7 +250,11 @@ class SaleSerializer(serializers.ModelSerializer):
 
 
 class SalePaymentSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """Serializer for processing a payment on a sale"""
+=======
+    #Serializer for processing a payment on a sale
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     payment_method = serializers.ChoiceField(choices=Payment.PAYMENT_METHODS)
     amount = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=0.01)
     
@@ -210,7 +281,11 @@ class SalePaymentSerializer(serializers.Serializer):
 
 
 class LoyaltyRedemptionSerializer(serializers.Serializer):
+<<<<<<< HEAD
     """Serializer for redeeming loyalty points on a sale"""
+=======
+    #Serializer for redeeming loyalty points on a sale
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
     points_to_redeem = serializers.IntegerField(min_value=1)
     
     def validate_points_to_redeem(self, value):

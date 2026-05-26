@@ -1,6 +1,18 @@
+<<<<<<< HEAD
 # sales/views.py
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+=======
+from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
+from urllib3 import request
+from .models import Sale, SaleItem
+from .models import Sale
+from .serializers import SaleSerializer
+
+from django.db import transaction
+from rest_framework.views import APIView
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -21,6 +33,13 @@ from products.models import Product
 # REMOVE THESE LINES - they don't belong here:
 # from .models import Return, ReturnItem, ReturnImage, ReturnLog
 
+
+from notifications.utils import send_notification
+
+from django.http import HttpResponse
+
+def Home(request):
+    return HttpResponse("Sales ERP Backend Running")
 
 class SaleViewSet(viewsets.ModelViewSet):
     """
@@ -103,6 +122,7 @@ class SaleViewSet(viewsets.ModelViewSet):
             notes=data.get('notes', ''),
             recorded_by=request.user
         )
+<<<<<<< HEAD
         
         return Response({
             'message': 'Payment added successfully',
@@ -272,3 +292,40 @@ class PaymentViewSet(viewsets.ReadOnlyModelViewSet):
         if user.role in ['super_admin', 'admin', 'manager', 'accountant']:
             return Payment.objects.all()
         return Payment.objects.filter(recorded_by=user)
+=======
+
+        # 4. FINALIZE STOCK AFTER PAYMENT
+        for item in items:
+
+            product = Product.objects.get(id=item['product_id'])
+
+            product.stock_quantity -= item['quantity']
+            product.reserved_stock -= item['quantity']
+
+            product.save()
+
+        # 5. CREATE RECEIPT
+        receipt = Receipt.objects.create(payment=payment)
+        send_notification(request.user, f"🛒 POS completed: Sale #{sale.id}, Receipt #{receipt.receipt_number}")
+
+        # 6. AUDIT LOG
+        AuditLog.objects.create(
+            user=sale.user,
+            action="POS_CHECKOUT",
+            description=f"Sale {sale.id} completed with receipt {receipt.receipt_number}"
+        )
+
+        return Response({
+            "message": "Transaction successful",
+            "sale_id": sale.id,
+            "receipt_number": receipt.receipt_number
+
+        
+        }, status=status.HTTP_201_CREATED)
+       
+    def perform_create(self, serializer):
+        sale = serializer.save()
+        send_notification(request.user, f"🛒 New sale created: Sale ID {sale.id} for customer {sale.customer.name} with total KES{sale.total}")
+
+    
+>>>>>>> 8c05e676f9e5f713ad213e0a46b3f92e73af6c4d
