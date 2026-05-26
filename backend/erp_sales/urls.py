@@ -24,14 +24,16 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-
     path('admin/', admin.site.urls),
-
     path('api/customers/', include('customers.urls')),
+    path('api/users/', include('users.urls')),
     path('api/products/', include('products.urls')),
-    path('api/', include('sales.urls')),
-    path('api/payments/', include('payments.urls')),
     path('api/sales/', include('sales.urls')),
+    #path('api/returns/', include('returns.urls')),
+    path('api/payments/', include('payments.urls')),
+    #path('api/reports/', include('reports.urls')),
+    #path('api/notifications/', include('notifications.urls')),
+    #path('api/inventory/', include('inventory.urls')),
     
     path(
         'api/token/',
