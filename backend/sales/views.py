@@ -17,6 +17,11 @@ from users.models import AuditLog
 
 from notifications.utils import send_notification
 
+from django.http import HttpResponse
+
+def Home(request):
+    return HttpResponse("Sales ERP Backend Running")
+
 class SaleViewSet(viewsets.ModelViewSet):
     queryset = Sale.objects.all()
     serializer_class = SaleSerializer 
